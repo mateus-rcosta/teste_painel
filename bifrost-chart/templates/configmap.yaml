@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-postgres-config
+data:
+  postgresql.conf: |
+{{ .Values.postgres.config.postgresqlConf | indent 4 }}
+  pg_hba.conf: |
+{{ .Values.postgres.config.pg_hbaConf | indent 4 }}
+---
+# ConfigMap para scripts de inicialização
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-postgres-init-scripts
+data:
+  init.sql: |
+{{ .Values.postgres.config.initScripts | indent 4 }}

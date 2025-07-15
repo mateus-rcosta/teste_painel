@@ -1,0 +1,86 @@
+postgres:
+  replicaCount: 1
+  image:
+    repository: postgres:17-alpine
+  service:
+    port: 5432
+    nodePort: 31234
+  secrets:
+    username: myuser
+    password: mypassword
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+  persistence:
+    enabled: true
+    storageClass: hostpath
+    size: 20Gi
+  config:
+    postgresqlConf: |
+      # PostgreSQL configuration file
+      listen_addresses = '*'
+      max_connections = 100
+      shared_buffers = 128MB
+      effective_cache_size = 256MB
+    pg_hbaConf: |
+      # PostgreSQL Client Authentication Configuration File
+      local all all trust
+      host all all 127.0.0.1/32 trust
+      host all all ::1/128 trust
+      host all all 0.0.0.0/0 md5
+    initScripts: |
+      CREATE TABLE IF NOT EXISTS "usuarios" (
+        "id" TEXT NOT NULL,
+        "nome" TEXT NOT NULL,
+        "email" TEXT NOT NULL,
+        "senha" TEXT NOT NULL,
+        "eh_admin" BOOLEAN NOT NULL DEFAULT false,
+        "esta_ativo" BOOLEAN NOT NULL DEFAULT true,
+        "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" TIMESTAMP(3),
+        "deleted_at" TIMESTAMP(3),
+        CONSTRAINT "usuarios_pkey" PRIMARY KEY ("id")
+      );
+      
+      CREATE TABLE IF NOT EXISTS "url" (
+        "id" TEXT NOT NULL,
+        "nome" TEXT NOT NULL,
+        "utms" JSONB NOT NULL,
+        "target" TEXT NOT NULL,
+        "esta_ativo" BOOLEAN NOT NULL DEFAULT true,
+        "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        "updated_at" TIMESTAMP(3),
+        "deleted_at" TIMESTAMP(3),
+        CONSTRAINT "url_pkey" PRIMARY KEY ("id")
+      );
+      
+      CREATE UNIQUE INDEX IF NOT EXISTS "usuarios_email_key" ON "usuarios"("email");
+      CREATE UNIQUE INDEX IF NOT EXISTS "url_nome_key" ON "url"("nome");
+
+node:
+  replicaCount: 2
+
+  image:
+    repository: mateustcosta/bifrost-next:1.0.0
+    pullPolicy: IfNotPresent
+
+  service:
+    type: NodePort
+    port: 3000
+    nodePort: 30888
+
+  env:
+    DATABASE_URL: "postgresql://myuser:mypassword@postgres-bifrost-0:31234/myuser?schema=redirect"
+    NODE_ENV: "production"
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"

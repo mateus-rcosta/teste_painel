@@ -1,0 +1,48 @@
+postgres:
+  replicaCount: 1
+
+  image: 
+    repository: postgres:17-alpine
+
+  service:
+    name: postgres-bifrost-service
+    port: 5432
+    nodePort: 31234
+    
+  secrets:
+    name: postgres-bifrost-secrets
+    username: myuser
+    password: mypassword
+
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "128Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+  persistence:
+    enabled: true
+    storageClass: hostpath
+    size: 20Gi
+
+  config:
+    postgresqlConf: |
+      # PostgreSQL configuration file
+      listen_addresses = '*'
+      max_connections = 100
+
+    pg_hbaConf: |
+      # PostgreSQL Client Authentication Configuration File
+      host all all all md5
+    
+    initScripts: |
+      CREATE SCHEMA IF NOT EXISTS redirect;
+      CREATE TABLE IF NOT EXISTS redirect.usuario (
+        id SERIAL PRIMARY KEY,
+        usuario JSONB,
+        dispositivo JSONB,
+        rastreio JSONB,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+      );
