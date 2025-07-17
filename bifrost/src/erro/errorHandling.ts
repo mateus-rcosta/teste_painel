@@ -1,11 +1,20 @@
 import { NextResponse } from 'next/server';
 
-export class ValidationError extends Error {}
-export class UnauthorizedError extends Error {}
-export class ForbiddenError extends Error {}
-export class NotFoundError extends Error {}
+export class ValidationError extends Error {
+  campos: Record<string, boolean>;
 
-export function errorHandling<Context extends Record<string, unknown> = Record<string, never>>(
+  constructor(message: string, campos: Record<string, boolean>) {
+    super(message);
+    this.name = 'ValidationError';
+    this.campos = campos;
+  }
+}
+
+export class UnauthorizedError extends Error { }
+export class ForbiddenError extends Error { }
+export class NotFoundError extends Error { }
+
+export function errorHandling<Context = unknown>(
   handler: (req: Request, context: Context) => Promise<NextResponse>
 ) {
   return async (req: Request, context: Context): Promise<NextResponse> => {
@@ -14,7 +23,10 @@ export function errorHandling<Context extends Record<string, unknown> = Record<s
     } catch (err) {
       console.error(err);
       if (err instanceof ValidationError) {
-        return NextResponse.json({ error: err.message }, { status: 400 });
+        return NextResponse.json(
+          { message: err.message, campos: err.campos },
+          { status: 400 }
+        );
       }
       if (err instanceof UnauthorizedError) {
         return NextResponse.json({ error: err.message }, { status: 401 });

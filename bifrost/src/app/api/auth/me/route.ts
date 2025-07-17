@@ -1,11 +1,11 @@
 import { errorHandling } from "@/erro/errorHandling";
-import { getUsuarioPorId } from "@/service/usuarioService";
+import { retornarUsuarioPorId } from "@/service/usuarioService";
 import { NextResponse } from "next/server";
 
 export const GET = errorHandling(async (req: Request) => {
 const userId = req.headers.get('x-user-id')!;
 
-  const usuario = await getUsuarioPorId(userId);
+  const usuario = await retornarUsuarioPorId(userId);
   
   if (!usuario) {
     return NextResponse.json({ error: 'Usuário não encontrado' }, { status: 404 });

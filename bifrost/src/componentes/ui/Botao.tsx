@@ -5,7 +5,7 @@ export interface BotaoProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   ehLink?: boolean;
   href?: string;
   target?: '_blank' | '_parent' | '_self' | '_top';
-  variante?: 'default' | 'outline' | 'seletor';
+  variante?: 'default' | 'outline' | 'seletor' | 'texto';
   tamanho?: 'sm' | 'md' | 'lg';
   bgColor?: 'bg-azul' | 'bg-verde' | 'bg-vermelho' | 'bg-transparent';
   textColor?: 'text-azul' | 'text-verde' | 'text-vermelho' | 'text-transparent' | 'text-white' | 'text-black';
@@ -39,6 +39,13 @@ export const Botao = ({
       ? 'px-4 py-2 text-base shadow-base'
       : 'px-6 py-3 text-lg shadow-lg';
 
+  if(variante === 'texto'){
+    return(
+      <button className={`${tamanho} px-0 py-0 shadow-none bg-none border-none cursor-pointer `}>
+        {texto}
+      </button>
+    );
+  };
   const varianteClasses =
     variante === 'default'
       ? `${bgColor}`
@@ -61,6 +68,7 @@ export const Botao = ({
   ]
     .filter(Boolean)
     .join(' ');
+
 
   if (isLink && href) {
     if (href.startsWith('/')) {

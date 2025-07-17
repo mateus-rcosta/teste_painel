@@ -62,7 +62,7 @@ postgres:
       CREATE UNIQUE INDEX IF NOT EXISTS "url_nome_key" ON "url"("nome");
 
 node:
-  replicaCount: 2
+  replicaCount: 1
 
   image:
     repository: mateustcosta/bifrost-next:1.0.0
@@ -74,13 +74,13 @@ node:
     nodePort: 30888
 
   env:
-    DATABASE_URL: "postgresql://myuser:mypassword@postgres-bifrost-0:31234/myuser?schema=redirect"
+    DATABASE_URL: "postgresql://myuser:mypassword@bifrost-postgres-service:5432/myuser?schema=redirect"
     NODE_ENV: "production"
 
   resources:
     requests:
-      cpu: "100m"
-      memory: "128Mi"
+      cpu: "1"
+      memory: "2Gi"
     limits:
-      cpu: "500m"
-      memory: "512Mi"
+      cpu: "2"
+      memory: "4Gi"

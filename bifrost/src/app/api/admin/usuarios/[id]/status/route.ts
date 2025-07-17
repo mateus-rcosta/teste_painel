@@ -1,10 +1,10 @@
 import { errorHandling } from '@/erro/errorHandling';
-import { ehAdmin } from '@/lib/verificaAdmin';
-import { alterarStatus } from '@/service/usuarioService';
+import { ehAdmin } from '@/lib/ehAdmin';
+import { atualizarStatus } from '@/service/usuarioService';
 import { NextResponse } from 'next/server';
 
 export const PATCH = errorHandling(
-  async (req: Request, { params }: { params: { id: string } }) => {
+  async (req: Request, { params }: { params: Promise<{ id: string }> }) => {
     const userId = req.headers.get('x-user-id')!;
     if (!(await ehAdmin(userId))) {
       return NextResponse.json(
@@ -12,8 +12,8 @@ export const PATCH = errorHandling(
         { status: 403 }
       );
     }
-
-    const usuario = await alterarStatus((await params).id);
+    const resolvedParams = await params;
+    const usuario = await atualizarStatus(resolvedParams.id);
     return NextResponse.json(usuario);
   }
 );

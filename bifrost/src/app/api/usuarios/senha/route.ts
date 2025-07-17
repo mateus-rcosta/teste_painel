@@ -1,4 +1,4 @@
-import { updateSenha } from '@/service/usuarioService';
+import { atualizarSenha } from '@/service/usuarioService';
 import { NextResponse } from 'next/server';
 
 export async function PATCH(req: Request) {
@@ -11,13 +11,14 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: 'Usuário não autenticado' }, { status: 401 });
     }
 
-    const usuario = await updateSenha({
+    const usuario = await atualizarSenha({
       usuarioId: userId,
       senhaAtual,
       novaSenha,
     });
 
     return NextResponse.json(usuario);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 400 });
   }

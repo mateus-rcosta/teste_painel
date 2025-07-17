@@ -13,7 +13,7 @@ export async function updateUrlRaw({
   target?: string;
 }) {
   return prisma.$executeRaw`
-    UPDATE url
+    UPDATE urls
     SET
       nome = COALESCE(${nome}, nome),
       utms = COALESCE(${utms}::jsonb, utms),
@@ -23,9 +23,9 @@ export async function updateUrlRaw({
   `;
 }
 
-export async function toggleUrlAtivoRaw(id: string) {
+export async function alterarStatusRaw(id: string) {
   return prisma.$executeRaw`
-    UPDATE url
+    UPDATE urls
     SET esta_ativo = NOT esta_ativo,
         updated_at = now()
     WHERE id = ${id} AND deleted_at IS NULL
@@ -34,7 +34,7 @@ export async function toggleUrlAtivoRaw(id: string) {
 
 export async function softDeleteUrlRaw(id: string) {
   return prisma.$executeRaw`
-    UPDATE url
+    UPDATE urls
     SET deleted_at = now()
     WHERE id = ${id} AND deleted_at IS NULL
   `;
