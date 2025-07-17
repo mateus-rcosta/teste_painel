@@ -13,15 +13,15 @@ spec:
   
 ---
 
-# apiVersion: v1
-# kind: Service
-# metadata:
-#   name: {{ .Release.Name }}-next
-# spec:
-#   type: {{ .Values.node.service.type }}
-#   ports:
-#     - port: {{ .Values.node.service.port }}
-#       targetPort: 3000
-#       nodePort: {{ .Values.node.service.nodePort}}
-#   selector:
-#     app: {{ .Release.Name }}-next
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-next
+spec:
+  type: {{ .Values.node.service.type }}
+  ports:
+    - port: {{ .Values.node.service.port }}
+      targetPort: 3000
+      nodePort: {{ .Values.node.service.nodePort}}
+  selector:
+    app: {{ .Release.Name }}-next

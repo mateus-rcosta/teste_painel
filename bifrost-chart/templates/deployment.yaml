@@ -79,35 +79,35 @@ spec:
             storage: {{ .Values.postgres.persistence.size }}
         storageClassName: {{ .Values.postgres.persistence.storageClass }}
 ---
-# apiVersion: apps/v1
-# kind: Deployment
-# metadata:
-#   name: {{ .Release.Name }}-next
-# spec:
-#   replicas: {{ .Values.node.replicaCount }}
-#   selector:
-#     matchLabels:
-#       app: {{ .Release.Name }}-next
-#   template:
-#     metadata:
-#       labels:
-#         app: {{ .Release.Name }}-next
-#     spec:
-#       containers:
-#         - name: next
-#           image: "{{ .Values.node.image.repository }}"
-#           imagePullPolicy: "IfNotPresent"
-#           ports:
-#             - containerPort: 3000
-#           env:
-#             - name: DATABASE_URL
-#               value: {{ .Values.node.env.DATABASE_URL | quote }}
-#             - name: NODE_ENV
-#               value: {{ .Values.node.env.NODE_ENV | quote }}
-#           resources:
-#             requests:
-#               cpu: {{ .Values.node.resources.requests.cpu }}
-#               memory: {{ .Values.node.resources.requests.memory }}
-#             limits:
-#               cpu: {{ .Values.node.resources.limits.cpu }}
-#               memory: {{ .Values.node.resources.limits.memory }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-next
+spec:
+  replicas: {{ .Values.node.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-next
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}-next
+    spec:
+      containers:
+        - name: next
+          image: "{{ .Values.node.image.repository }}"
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: {{ .Values.node.env.DATABASE_URL | quote }}
+            - name: NODE_ENV
+              value: {{ .Values.node.env.NODE_ENV | quote }}
+          resources:
+            requests:
+              cpu: {{ .Values.node.resources.requests.cpu }}
+              memory: {{ .Values.node.resources.requests.memory }}
+            limits:
+              cpu: {{ .Values.node.resources.limits.cpu }}
+              memory: {{ .Values.node.resources.limits.memory }}

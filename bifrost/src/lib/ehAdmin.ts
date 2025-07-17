@@ -1,5 +1,5 @@
+import { verificarAdmin } from "@/service/usuarioService";
 import { validarUuid } from "./validar"
-import { verificaAdmin } from '@/service/usuarioService';
 
 export const ehAdmin = async (id: string): Promise<boolean> => {
     // Validação de UUID
@@ -7,5 +7,5 @@ export const ehAdmin = async (id: string): Promise<boolean> => {
         return false;
     }
 
-    return await verificaAdmin(id);
+    return await verificarAdmin(id);
 };

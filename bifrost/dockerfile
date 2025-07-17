@@ -11,6 +11,7 @@ RUN npm install --frozen-lockfile
 
 # Copia o restante do código
 COPY . .
+COPY .env .env
 
 # Gera Prisma Client
 RUN npx prisma generate
@@ -27,9 +28,10 @@ WORKDIR /app
 COPY --from=builder /app/package.json /app/package-lock.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/src ./src
+COPY --from=builder /app/.env .env
 
 # Instala apenas dependências de produção
 RUN npm install --omit=dev --frozen-lockfile

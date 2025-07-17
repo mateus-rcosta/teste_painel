@@ -54,16 +54,16 @@ export const Input = ({
 
   const wrapperClasses = `relative ${containerClasses[variant]} ${textColor} w-full`;
 
-  const inputClasses = `bg-transparent w-full ${textColor} ${tamanhoClass} border-none focus:outline-none`;
+  const inputClasses = `bg-transparent w-full ${textColor} ${tamanhoClass} border-none focus:outline-none ${icon ? 'pl-6' : ''}`;
 
   const labelBaseClasses = `
     absolute pointer-events-none transition-all duration-200
-    bg-transparent text-gray-600
+    bg-transparent text-gray-600 
   `;
 
   const labelPosition = isFocused || hasValue
-    ? 'text-xs -top-3 bg-white px-2'
-    : 'text-base top-1/2 transform -translate-y-1/2';
+    ? 'text-xs -top-3 bg-transparent px-2'
+    : `text-base top-1/2 transform -translate-y-1/2 ${icon ? 'pl-6' : ''}`;
 
   return (
     <div className={wrapperClasses}>
@@ -73,7 +73,7 @@ export const Input = ({
           height={16}
           src={icon}
           alt={alt || 'Ícone input'}
-          className="absolute left-2 top-1/2 transform -translate-y-1/2"
+          className="absolute left-0 top-1/2 transform -translate-y-1/2 mr-4"
         />
       )}
       {label && (

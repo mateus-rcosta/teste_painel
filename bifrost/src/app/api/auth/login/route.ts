@@ -10,12 +10,12 @@ export const POST = errorHandling(
 
     const res = NextResponse.json({ usuario });
 
-    res.cookies.set('token', token, {
+    res.cookies.set('token', await token, {
       httpOnly: true,
       path: '/',
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 60 * 60 * 24 * 1, // 1 dia
+      maxAge: 60 * 60 * 24 * 1,
     });
 
     return res;

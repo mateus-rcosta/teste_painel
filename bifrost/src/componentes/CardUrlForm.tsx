@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { CardPainel } from './ui/CardPainel';
 import { Input } from './ui/Input';
 
-
 interface CardUrlFormProps {
   dados?: {
     nome?: string;
@@ -49,6 +48,7 @@ export const CardUrlForm = ({
   const [campaign, setCampaign] = useState(dados?.utms?.campaign || '');
   const [term, setTerm] = useState(dados?.utms?.term || '');
   const [content, setContent] = useState(dados?.utms?.content || '');
+  const [erros, setErros] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (modo === "editar" && urlId) {
@@ -66,16 +66,33 @@ export const CardUrlForm = ({
     }
   }, [modo, urlId]);
 
+  const validar = () => {
+    const campos: Record<string, string> = {};
+
+    if (!nome.trim()) campos.nome = "Nome é obrigatório.";
+    if (!target.trim()) campos.target = "Target é obrigatório.";
+    if (!target.trim().startsWith('https://') && !target.trim().startsWith('http://')) {
+      campos.target = "Target deve começar com http:// ou https://";
+    }
+    return campos;
+  };
+
   const handleConfirm = () => {
+    const validacao = validar();
+    if (Object.keys(validacao).length > 0) {
+      setErros(validacao);
+      return;
+    }
+    setErros({});
     onConfirm({
-      nome,
-      target,
+      nome: nome.trim(),
+      target: target.trim(),
       utms: {
-        source,
-        medium,
-        campaign,
-        term,
-        content,
+        source: source.trim() || undefined,
+        medium: medium.trim() || undefined,
+        campaign: campaign.trim() || undefined,
+        term: term.trim() || undefined,
+        content: content.trim() || undefined,
       },
     });
   };
@@ -103,13 +120,19 @@ export const CardUrlForm = ({
             label='Nome'
             value={nome}
             onChange={(e) => setNome(e.target.value)}
+            required
           />
+          {erros.nome && <p className="text-vermelho text-xs">{erros.nome}</p>}
+
           <Input
             variant="default"
             label='Target'
             value={target}
             onChange={(e) => setTarget(e.target.value)}
+            required
           />
+          {erros.target && <p className="text-vermelho text-xs">{erros.target}</p>}
+
           <Input
             variant="default"
             label='Origem'
@@ -136,7 +159,7 @@ export const CardUrlForm = ({
           />
           <Input
             variant="default"
-            label='Conteudo'
+            label='Conteúdo'
             value={content}
             onChange={(e) => setContent(e.target.value)}
           />
@@ -144,4 +167,4 @@ export const CardUrlForm = ({
       )}
     </CardPainel>
   );
-}
+};

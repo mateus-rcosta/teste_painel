@@ -1,5 +1,5 @@
 import { errorHandling } from '@/erro/errorHandling';
-import { criarUrl, getUrls } from '@/service/urlService';
+import { criarUrl, retornarUrls} from '@/service/urlService';
 import { NextResponse } from 'next/server';
 
 export const POST = errorHandling(
@@ -18,6 +18,9 @@ export const GET = errorHandling(async (req: Request) => {
   const orderBy = searchParams.get('orderBy') || 'createdAt';
   const orderDirection = searchParams.get('orderDirection') || 'desc';
 
-  const result = await getUrls( await { page, size, orderBy, orderDirection });
+  const searchField = searchParams.get('searchField') || 'nome';
+  const searchValue = searchParams.get('searchValue')?.trim() || '';
+
+  const result = await retornarUrls({ page, size, orderBy, orderDirection, searchField, searchValue });
   return NextResponse.json(result);
 });
